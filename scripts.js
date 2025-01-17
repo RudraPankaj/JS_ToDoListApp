@@ -86,9 +86,7 @@ const taskList = tasks.map(t => `
 if (taskList) {
     taskListLoader.innerHTML = `${taskList}`;
 } else {
-    taskListLoader.innerHTML = ` <div class="task-list-header">
-                <h2><i class="ri-list-check"></i> Tasks</h2>
-            </div> <p>No tasks available</p>`;
+    taskListLoader.innerHTML = `</div> <p>No tasks available</p>`;
 }
 
 // Pressing a task from tasklist will show in task view
