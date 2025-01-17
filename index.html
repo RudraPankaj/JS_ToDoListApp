@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
     <title>To Do Go - Home</title>
 </head>
 <body>
@@ -18,11 +18,13 @@
         </div>
         <div class="right-nav-container">
             <span class="search-box">
-                <input type="text" placeholder="Search tasks..." class="search-input">
-                <button class="search-btn"><i class="ri-search-line"></i></button>
+                <form action="index.html" method="get">
+                    <input type="text" placeholder="Search tasks..." class="search-input" name="query">
+                    <button class="search-btn" type="submit"><i class="ri-search-line"></i></button>
+                </form>
             </span>
             <span class="add-new-task">
-                <button class="add-task-btn"><i class="ri-add-circle-line"></i> Add New Task</button>
+                <button class="add-task-btn" id="add-task-btn"><i class="ri-add-circle-line"></i> Add New Task</button>
             </span>
         </div>
     </section>
@@ -33,62 +35,73 @@
                 <h2><i class="ri-list-check"></i> Tasks</h2>
             </div>
             <div class="task-list">
-                <div class="task-item">
-                    <h3 class="task-title">Task 1</h3>
-                    <p class="task-description">Task Description</p>
-                </div>
-                <div class="task-item">
-                    <h3 class="task-title">Task 2</h3>
-                    <p class="task-description">Task Description</p>
-                </div>
-                <div class="task-item">
-                    <h3 class="task-title">Task 3</h3>
-                    <p class="task-description">Task Description</p>
-                </div>
-                <div class="task-item">
-                    <h3 class="task-title">Task 4</h3>
-                    <p class="task-description">Task Description</p>
-                </div>
-                <div class="task-item">
-                    <h3 class="task-title">Task 5</h3>
-                    <p class="task-description">Task Description</p>
-                </div>
-                <div class="task-item">
-                    <h3 class="task-title">Task 6</h3>
-                    <p class="task-description">Task Description</p>
-                </div>
-                <div class="task-item">
-                    <h3 class="task-title">Task 7</h3>
-                    <p class="task-description">Task Description</p>
-                </div>
+                <a href="index.html?taskid=1">
+                    <div class="task-item">
+                        <h3 class="task-title">Task 1</h3>
+                        <p class="task-description">Task Description</p>
+                    </div>
+                </a>
+                <a href="index.html?taskid=2">
+                    <div class="task-item">
+                        <h3 class="task-title">Task 2</h3>
+                        <p class="task-description">Task Description</p>
+                    </div>
+                </a>
             </div>
         </div>
 
-        <div class="task-view-container">
+        <div class="task-view-container" id="task-view-container">
             <div class="task-view-header">
                 <h2><i class="ri-information-line"></i> Task Details</h2>
             </div>
             <div class="task-view">
                 <div class="task-view-item">
-
-                    <h3 class="task-header">Task 1</h3>
-                    <p class="task-description">Task Description</p>
                     
-                    <div class="task-footer">
-                        <span class="task-date-time">
+                    <input type="text" class="task-title" id="task-title" placeholder="Task 1" disabled>
+                    <textarea class="task-description" id="task-description" placeholder="Task Description" disabled></textarea>
+                    
+                    <div class="task-footer" id="task-footer">
+                        <span class="task-date-time" id="task-date-time">
                             <span class="task-date"><i class="ri-time-line"></i> Updated on <span class="js-date">12 Dec 2025</span></span>
                             <span class="task-time">at <span class="js-time">12:00 pm</span></span>
                         </span>
                         <span class="task-actions">
-                            <button class="edit-task-btn">Edit</button>
-                            <button class="delete-task-btn">Delete</button>
+                            <button class="save-task-btn" id="save-task-btn">Save</button>
+                            <button class="edit-task-btn" id="edit-task-btn">Edit</button>
+                            <button class="delete-task-btn" id="delete-task-btn">Delete</button>
                         </span>
                     </div>
 
                 </div>
             </div>
         </div>
+
+        <div class="task-create-container" id="task-create-container">
+            <div class="task-create-header">
+                <h2><i class="ri-information-line"></i> Add New Task</h2>
+            </div>
+            <div class="task-create">
+                <div class="task-create-item">
+
+                    <form id="userForm">
+                        <input type="text" class="task-create-title" id="task-create-title" placeholder="Enter a task title" required>
+                        <textarea class="task-create-description" id="task-create-description" placeholder="Add task details" required></textarea>
+                        
+                        <div class="task-create-footer" id="task-create-footer">
+                            <span class="task-date-time" id="task-date-time">
+                                New task
+                            </span>
+                            <span class="task-create-actions">
+                                <button class="create-task-btn" id="create-task-btn"><i class="ri-add-large-line"></i> Create</button>
+                            </span>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
     </section>
 
+    <script src="scripts.js"></script>
 </body>
 </html>
