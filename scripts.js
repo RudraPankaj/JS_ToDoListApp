@@ -124,8 +124,8 @@ if (urlTaskId) { // checks if there is a task id in the url
 
 }
 
-// Pressing save button will save the changes made to the text description
-saveTaskBtn.addEventListener('click', () => {
+// Pressing save button will save the changes of tasktitle and taskdescription
+saveTaskBtn.addEventListener('click', function () {
     taskDescription.disabled = true;
     taskTitle.disabled = true;
 
@@ -134,18 +134,18 @@ saveTaskBtn.addEventListener('click', () => {
     deleteTaskBtn.style.display = 'inline';
     taskFooter.style.justifyContent = 'space-between';
     saveTaskBtn.style.display = 'none';
-});
 
-// Pressing save button will save the changes of tasktitle and taskdescription
-saveTaskBtn.addEventListener('click', function () {
     const taskId = this.getAttribute('data-taskid');
     const taskIndex = tasks.findIndex(t => t.id == taskId);
 
     if (taskIndex > -1) {
         tasks[taskIndex].title = taskTitle.value;
         tasks[taskIndex].description = taskDescription.value;
+        tasks[taskIndex].date = new Date().toLocaleString();
         localStorage.setItem('tasks', JSON.stringify(tasks));
         renderTaskList();
+        taskWordCount.innerHTML = countWords(taskDescription.value);
+        taskDateTime.innerHTML = tasks[taskIndex].date;
     }
 });
 
