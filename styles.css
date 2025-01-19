@@ -127,7 +127,7 @@ body {
 .main-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: first baseline;
     flex-direction: row;
     column-gap: 15px;
     margin: 20px;
