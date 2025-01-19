@@ -11,6 +11,7 @@ let deleteTaskBtn = document.getElementById('delete-task-btn');
 // == Task view elements
 let taskTitle = document.getElementById('task-title');
 let taskDescription = document.getElementById('task-description');
+let taskWordCount = document.getElementById('task-word-count');
 let taskDateTime = document.getElementById('task-date-time');
 let taskFooter = document.getElementById('task-footer');
 
@@ -64,12 +65,14 @@ createTaskBtn.addEventListener('click', function (e) {
 
 // Fetch JSON tasks list view from local storage
 function renderTaskList() {
+    const urlParam = new URLSearchParams(window.location.search);
+    const urlTaskId = urlParam.get('taskid');
     const taskList = tasks
                     .slice()
                     .reverse()
                     .map(t => `
                         <a href="index.html?taskid=${t.id}">
-                            <div class="task-item">
+                            <div class="task-item" ${(urlTaskId == t.id) ? 'active' : ''}>
                                 <h3 class="task-title">${t.title}</h3>
                                 <p class="task-description">${t.description}</p>
                             </div>
@@ -105,6 +108,7 @@ if (urlTaskId) { // checks if there is a task id in the url
 
         taskTitle.value = task.title;
         taskDescription.value = task.description;
+        taskWordCount.innerHTML = countWords(task.description);
         deleteTaskBtn.setAttribute('data-taskid', task.id);
         saveTaskBtn.setAttribute('data-taskid', task.id);
         taskDateTime.innerHTML = task.date;
@@ -160,3 +164,9 @@ deleteTaskBtn.addEventListener('click', function () {
 
 // Render task list
 renderTaskList();
+
+// Count words in a string
+function countWords(str) {
+    const words = str.match(/\b\w+\b/g);
+    return words ? words.length : 0;
+}
