@@ -34,17 +34,6 @@ editTaskBtn.addEventListener('click', () => {
     saveTaskBtn.style.display = 'inline';
 });
 
-// Pressing save button will save the changes made to the text description
-saveTaskBtn.addEventListener('click', () => {
-    taskDescription.disabled = true;
-    taskTitle.disabled = true;
-
-    editTaskBtn.style.display = 'inline';
-    taskDateTime.style.display = 'inline';
-    deleteTaskBtn.style.display = 'inline';
-    taskFooter.style.justifyContent = 'space-between';
-    saveTaskBtn.style.display = 'none';
-});
 
 // Pressing Create will add task to local storage
 const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -73,30 +62,42 @@ createTaskBtn.addEventListener('click', function (e) {
     window.location.href = `index.html?taskid=${taskId}`;
 });
 
-// JSON tasks list view from local storage
-const taskList = tasks.map(t => `
-    <a href="index.html?taskid=${t.id}">
-        <div class="task-item">
-            <h3 class="task-title">${t.title}</h3>
-            <p class="task-description">${t.description}</p>
-        </div>
-    </a>
-`).join('');
+// Fetch JSON tasks list view from local storage
+function renderTaskList() {
+    const taskList = tasks
+                    .slice()
+                    .reverse()
+                    .map(t => `
+                        <a href="index.html?taskid=${t.id}">
+                            <div class="task-item">
+                                <h3 class="task-title">${t.title}</h3>
+                                <p class="task-description">${t.description}</p>
+                            </div>
+                        </a>
+                    `).join('');
 
-if (taskList) {
-    taskListLoader.innerHTML = `${taskList}`;
-} else {
-    taskListLoader.innerHTML = `</div> <p>No tasks available</p>`;
+    if (taskList) {
+        taskListLoader.innerHTML = `${taskList}`;
+    } else {
+        taskListLoader.innerHTML = `</div> <p>No tasks available!</p>`;
+    }
+
+    // Showing the task description preview in task list
+    document.querySelectorAll('.task-description').forEach(item => {
+        item.innerHTML = item.innerHTML.substring(0, 55) + '...';
+    });
 }
 
-// Pressing a task from tasklist will show in task view
+// Clicking a task from tasklist will show in task view with full description
 const urlParams = new URLSearchParams(window.location.search);
 const urlTaskId = urlParams.get('taskid');
 
-if (urlTaskId) {
+if (urlTaskId) { // checks if there is a task id in the url
+
     const taskExists = tasks.some(t => t.id == urlTaskId);
 
-    if(taskExists) {
+    if(taskExists) { // checks if the task exists in the tasks list
+
         const task = tasks.find(t => t.id == urlTaskId);
 
         taskViewContainer.style.display = 'block';
@@ -104,10 +105,58 @@ if (urlTaskId) {
 
         taskTitle.value = task.title;
         taskDescription.value = task.description;
+        deleteTaskBtn.setAttribute('data-taskid', task.id);
+        saveTaskBtn.setAttribute('data-taskid', task.id);
         taskDateTime.innerHTML = task.date;
-    } else {
+
+    } else { // if task not found
+
         taskViewItem.innerHTML = `<p>Task not found</p>`;
+
     }
-} else {
+} else { // if no task id in the url
+
     taskViewItem.innerHTML = `<p>Plese select a task to view</p>`;
+
 }
+
+// Pressing save button will save the changes made to the text description
+saveTaskBtn.addEventListener('click', () => {
+    taskDescription.disabled = true;
+    taskTitle.disabled = true;
+
+    editTaskBtn.style.display = 'inline';
+    taskDateTime.style.display = 'inline';
+    deleteTaskBtn.style.display = 'inline';
+    taskFooter.style.justifyContent = 'space-between';
+    saveTaskBtn.style.display = 'none';
+});
+
+// Pressing save button will save the changes of tasktitle and taskdescription
+saveTaskBtn.addEventListener('click', function () {
+    const taskId = this.getAttribute('data-taskid');
+    const taskIndex = tasks.findIndex(t => t.id == taskId);
+
+    if (taskIndex > -1) {
+        tasks[taskIndex].title = taskTitle.value;
+        tasks[taskIndex].description = taskDescription.value;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTaskList();
+    }
+});
+
+// Delete task from local storage using delete button
+deleteTaskBtn.addEventListener('click', function () {
+    const taskId = this.getAttribute('data-taskid');
+    const taskIndex = tasks.findIndex(t => t.id == taskId);
+
+    if (taskIndex > -1) {
+        tasks.splice(taskIndex, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        window.location.href = `index.html`;
+    }
+});
+
+
+// Render task list
+renderTaskList();
