@@ -37,6 +37,39 @@ editTaskBtn.addEventListener('click', () => {
     saveTaskBtn.style.display = 'inline';
 });
 
+// Fetch JSON tasks list view from local storage
+function renderTaskList() {
+    const urlParam = new URLSearchParams(window.location.search);
+    const urlTaskId = urlParam.get('taskid');
+    const taskList = tasks
+                    .slice()
+                    .reverse()
+                    .map(t => `
+                        <a href="index.html?taskid=${t.id}">
+                            <div class="task-item" ${(urlTaskId == t.id) ? 'active' : ''}>
+                                <h3 class="task-title">${t.title}</h3>
+                                <p class="task-description">${t.description}</p>
+                            </div>
+                        </a>
+                    `).join('');
+
+    if (taskList) {
+        taskListLoader.innerHTML = `${taskList}`;
+    } else {
+        taskListLoader.innerHTML = `<p>No task available!</p>`;
+        createTaskBtn = document.getElementById('create-task-btn');
+    }
+
+    // Showing the task description preview in task list
+    document.querySelectorAll('.task-description').forEach(item => {
+        if(windowWidth <= 480) {
+            item.innerHTML = item.innerHTML.substring(0, 30) + '...';
+        } else {
+            item.innerHTML = item.innerHTML.substring(0, 55) + '...';
+        }
+    });
+}
+
 
 // Pressing Create will add task to local storage
 const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -65,38 +98,6 @@ createTaskBtn.addEventListener('click', function (e) {
     window.location.href = `index.html?taskid=${taskId}`;
 });
 
-// Fetch JSON tasks list view from local storage
-function renderTaskList() {
-    const urlParam = new URLSearchParams(window.location.search);
-    const urlTaskId = urlParam.get('taskid');
-    const taskList = tasks
-                    .slice()
-                    .reverse()
-                    .map(t => `
-                        <a href="index.html?taskid=${t.id}">
-                            <div class="task-item" ${(urlTaskId == t.id) ? 'active' : ''}>
-                                <h3 class="task-title">${t.title}</h3>
-                                <p class="task-description">${t.description}</p>
-                            </div>
-                        </a>
-                    `).join('');
-
-    if (taskList) {
-        taskListLoader.innerHTML = `${taskList}`;
-    } else {
-        taskListLoader.innerHTML = `</div> <p>No tasks available!</p>`;
-    }
-
-    // Showing the task description preview in task list
-    document.querySelectorAll('.task-description').forEach(item => {
-        if(windowWidth <= 480) {
-            item.innerHTML = item.innerHTML.substring(0, 30) + '...';
-        } else {
-            item.innerHTML = item.innerHTML.substring(0, 55) + '...';
-        }
-    });
-}
-
 // Clicking a task from tasklist will show in task view with full description
 const urlParams = new URLSearchParams(window.location.search);
 const urlTaskId = urlParams.get('taskid');
@@ -121,7 +122,7 @@ if (urlTaskId) { // checks if there is a task id in the url
 
     } else { // if task not found
 
-        taskViewItem.innerHTML = `<p>Task not found</p>`;
+        taskViewItem.innerHTML = `<p>Task not found!</p>`;
 
     }
 } else { // if no task id in the url
