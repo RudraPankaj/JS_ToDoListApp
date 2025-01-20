@@ -306,13 +306,32 @@ body {
     color: #626262;
 }
 
+
+/*===============================
+=           Footer CSS          =
+===============================*/
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
 @media screen and (max-width: 480px) {
     .search-box input[type="text"] {
         width: 70px;
     }
 }
 
-@media screen and (min-width: 892px) {
+@media screen and (min-width: 481px) {
     .task-list-container {
         width: 290px;
     }

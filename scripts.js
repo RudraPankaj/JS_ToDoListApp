@@ -14,6 +14,8 @@ let taskDescription = document.getElementById('task-description');
 let taskWordCount = document.getElementById('task-word-count');
 let taskDateTime = document.getElementById('task-date-time');
 let taskFooter = document.getElementById('task-footer');
+// == Window Measurements
+let windowWidth = document.documentElement.clientWidth;
 
 
 // Pressing Add New Task button will show create task form
@@ -87,7 +89,11 @@ function renderTaskList() {
 
     // Showing the task description preview in task list
     document.querySelectorAll('.task-description').forEach(item => {
-        item.innerHTML = item.innerHTML.substring(0, 55) + '...';
+        if(windowWidth <= 480) {
+            item.innerHTML = item.innerHTML.substring(0, 30) + '...';
+        } else {
+            item.innerHTML = item.innerHTML.substring(0, 55) + '...';
+        }
     });
 }
 
