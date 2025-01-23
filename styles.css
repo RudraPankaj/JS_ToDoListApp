@@ -215,7 +215,9 @@ body {
 }
 
 .task-create-item .task-create-title {
+    font-family: "Comic Neue", serif;
     background-color: #fffde1;
+    font-size: 1.1em;
     outline: none;
     border: none;
     width: 100%;

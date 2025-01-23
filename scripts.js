@@ -3,6 +3,8 @@ let taskListLoader = document.getElementById('task-list');
 let taskViewContainer = document.getElementById('task-view-container');
 let createTaskContainer = document.getElementById('task-create-container');
 let taskViewItem = document.getElementById('task-view-item');
+// == Input boxes
+let searchBoxInput = document.getElementById('search-input');
 // == Buttons
 let createTaskBtn = document.getElementById('create-task-btn');
 let editTaskBtn = document.getElementById('edit-task-btn');
@@ -16,7 +18,6 @@ let taskDateTime = document.getElementById('task-date-time');
 let taskFooter = document.getElementById('task-footer');
 // == Window Measurements
 let windowWidth = document.documentElement.clientWidth;
-
 
 // Pressing Add New Task button will show create task form
 document.getElementById('add-task-btn').addEventListener('click', () => {
@@ -41,17 +42,41 @@ editTaskBtn.addEventListener('click', () => {
 function renderTaskList() {
     const urlParam = new URLSearchParams(window.location.search);
     const urlTaskId = urlParam.get('taskid');
-    const taskList = tasks
-                    .slice()
-                    .reverse()
-                    .map(t => `
-                        <a href="index.html?taskid=${t.id}">
-                            <div class="task-item" ${(urlTaskId == t.id) ? 'active' : ''}>
-                                <h3 class="task-title">${t.title}</h3>
-                                <p class="task-description">${t.description}</p>
-                            </div>
-                        </a>
-                    `).join('');
+    const urlSearchQuery = urlParam.get('query');
+    let taskList = '';
+
+    if (urlSearchQuery) { // if search query is in the url, show the search results
+        searchBoxInput.value = urlSearchQuery;
+        console.log(urlTaskId);
+        taskList = tasks
+            .filter(t => 
+                t.title.toLowerCase().includes(urlSearchQuery.toLowerCase()) || 
+                t.description.toLowerCase().includes(urlSearchQuery.toLowerCase())
+            )
+            .reverse()
+            .map(t => `
+                <a href="index.html?taskid=${t.id}&query=${urlSearchQuery || ''}">
+                    <div class="task-item" ${urlTaskId == t.id ? 'active' : ''}>
+                        <h3 class="task-title">${t.title}</h3>
+                        <p class="task-description">${t.description}</p>
+                    </div>
+                </a>
+            `)
+            .join('');
+    } else { // if no search query, show all tasks
+        taskList = tasks
+            .slice()
+            .reverse()
+            .map(t => `
+                <a href="index.html?taskid=${t.id}">
+                    <div class="task-item" ${urlTaskId == t.id ? 'active' : ''}>
+                        <h3 class="task-title">${t.title}</h3>
+                        <p class="task-description">${t.description}</p>
+                    </div>
+                </a>
+            `)
+        .join('');
+    }
 
     if (taskList) {
         taskListLoader.innerHTML = `${taskList}`;
@@ -67,6 +92,11 @@ function renderTaskList() {
         } else {
             item.innerHTML = item.innerHTML.substring(0, 55) + '...';
         }
+    });
+
+    // Restoring Scroll position of task list on page reload
+    window.addEventListener('load', function() {
+        taskListLoader.scrollTop = localStorage.getItem('scrollPosition');
     });
 }
 
@@ -131,6 +161,11 @@ if (urlTaskId) { // checks if there is a task id in the url
 
 }
 
+// Saving Scroll position of task list on page reload
+window.addEventListener('beforeunload', function() {
+    localStorage.setItem('scrollPosition', taskListLoader.scrollTop);
+});
+
 // Pressing save button will save the changes of tasktitle and taskdescription
 saveTaskBtn.addEventListener('click', function () {
     taskDescription.disabled = true;
@@ -172,8 +207,12 @@ deleteTaskBtn.addEventListener('click', function () {
 // Render task list
 renderTaskList();
 
-// Count words in a string
+// Count words in a string (space-separated, handles special characters)
 function countWords(str) {
-    const words = str.match(/\b\w+\b/g);
-    return words ? words.length : 0;
+    // Split by spaces and filter out empty entries
+    const words = str
+        .trim() // Remove leading/trailing spaces
+        .split(/\s+/) // Split by one or more whitespace characters
+        .filter(word => /[\p{L}\p{N}]+/u.test(word)); // Keep entries with letters or numbers
+    return words.length;
 }
