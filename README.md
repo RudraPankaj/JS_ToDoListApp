@@ -13,18 +13,14 @@ ToDoGo is a lightweight and user-friendly To-Do List application built using **H
 
 ## 📸 Screenshots
 
-You can add the following screenshots to showcase the app:
-
 1. **Homepage with Task List**  
-   ![Task List](image1.png)
+   ![Task List](screenshots/image1.png)
 
 2. **Task Details View**  
-   ![Task Details](image2.png)
+   ![Task Details](screenshots/image2.png)
 
 3. **Edit and Delete Options**  
-   ![Edit/Delete Task](image3.png)
-
-*(Replace `image1.png`, `image2.png`, etc., with actual screenshot filenames.)*
+   ![Edit/Delete Task](screenshots/image3.png)
 
 ## 🚀 Live Demo
 
